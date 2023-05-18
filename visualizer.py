@@ -14,21 +14,21 @@ def get_decibel(target_time, freq, frequencies_index_ratio):
 
 def get_bars(bars, frequencies):
     r = len(frequencies)
-    print(r)
     width = screen_w/r
     x = (screen_w - width*r)/2
     for c in frequencies:
         if c < 300:
-            bars.append(AudioBar(x, 450, c, (255, 0, 0), max_height=300, width=width))
+            bars.append(AudioBar(x, screen_h, c, (255, 0, 0), max_height=screen_h * 0.5, width=width))
         elif c < 4000:
-            bars.append(AudioBar(x,250, c, (0, 255, 0), max_height=300, width=width))
+            bars.append(AudioBar(x, screen_h, c, (0, 255, 0), min_height=screen_h * 0.25, max_height=screen_h * 0.75, width=width))
         else:
-            bars.append(AudioBar(x, 50, c, (0, 0, 255), max_height=300, width=width))
+            bars.append(AudioBar(x, screen_h, c, (0, 0, 255), min_height=screen_h * 0.5, max_height=screen_h, width=width))
         x += width
 
 
 # TODO: add command line args for filename (and other knobs??)
-filename = "Songs/LanaDelRey-DietMountainDew(OfficialInstrumental).mp3"
+# filename = "Songs/LanaDelRey-DietMountainDew(OfficialInstrumental).mp3"
+filename = "Songs/MKDomDolla-RhymeDust.mp3"
 
 time_series, sample_rate = librosa.load(filename)  # getting information from the file
 
@@ -60,7 +60,7 @@ pygame.init()
 infoObject = pygame.display.Info()
 
 screen_w = int(infoObject.current_w/1.5)
-screen_h = int(infoObject.current_w/2.5)
+screen_h = int(infoObject.current_h/1.5)
 
 # Set up the drawing window
 screen = pygame.display.set_mode([screen_w, screen_h])
