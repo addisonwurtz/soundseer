@@ -1,5 +1,5 @@
 import pygame
-import numpy
+
 
 def clamp(min_value, max_value, value):
 
