@@ -1,51 +1,17 @@
 import librosa
 import numpy as np
 import pygame
+from audiobar import AudioBar
+from frequencyband import FrequencyBand
 
 
-def clamp(min_value, max_value, value):
-
-    if value < min_value:
-        return min_value
-
-    if value > max_value:
-        return max_value
-
-    return value
+def get_decibel(target_time, freq, frequencies_index_ratio):
+    return spectrogram[int(freq * frequencies_index_ratio)][int(target_time * time_index_ratio)]
 
 
-class AudioBar:
-
-    def __init__(self, x, y, freq, color, width=50, min_height=10, max_height=100, min_decibel=-80, max_decibel=0):
-
-        self.x, self.y, self.freq = x, y, freq
-
-        self.color = color
-
-        self.width, self.min_height, self.max_height = width, min_height, max_height
-
-        self.height = min_height
-
-        self.min_decibel, self.max_decibel = min_decibel, max_decibel
-
-        self.__decibel_height_ratio = (self.max_height - self.min_height)/(self.max_decibel - self.min_decibel)
-
-    def update(self, dt, decibel):
-
-        desired_height = decibel * self.__decibel_height_ratio + self.max_height
-
-        speed = (desired_height - self.height)/0.1
-
-        self.height += speed * dt
-
-        self.height = clamp(self.min_height, self.max_height, self.height)
-
-    def render(self, screen):
-
-        pygame.draw.rect(screen, self.color, (self.x, self.y + self.max_height - self.height, self.width, self.height))
-
-
-filename = "LanaDelRey-DietMountainDew(OfficialInstrumental).mp3"
+# TODO: add command line args for filename (and other knobs??)
+# filename = "Songs/LanaDelRey-DietMountainDew(OfficialInstrumental).mp3"
+filename = "Songs/MKDomDolla-RhymeDust.mp3"
 
 time_series, sample_rate = librosa.load(filename)  # getting information from the file
 
@@ -54,47 +20,54 @@ stft = np.abs(librosa.stft(time_series, hop_length=512, n_fft=2048*4))
 
 spectrogram = librosa.amplitude_to_db(stft, ref=np.max)  # converting the matrix to decibel matrix
 
-frequencies = librosa.core.fft_frequencies(n_fft=2048*4)  # getting an array of frequencies
+freqs = librosa.core.fft_frequencies(n_fft=2048 * 4)  # getting an array of frequencies
+
+# split into frequency bands
+bass_frequencies, mid_frequencies, treble_frequencies = np.split(freqs, [300, 4000])
 
 # getting an array of time periodic
 times = librosa.core.frames_to_time(np.arange(spectrogram.shape[1]), sr=sample_rate, hop_length=512, n_fft=2048*4)
 
 time_index_ratio = len(times)/times[len(times) - 1]
 
-frequencies_index_ratio = len(frequencies)/frequencies[len(frequencies)-1]
-
-
-def get_decibel(target_time, freq):
-    return spectrogram[int(freq * frequencies_index_ratio)][int(target_time * time_index_ratio)]
 
 
 pygame.init()
 
 infoObject = pygame.display.Info()
 
-screen_w = int(infoObject.current_w/2.5)
-screen_h = int(infoObject.current_w/2.5)
+screen_w = int(infoObject.current_w/1.5)
+screen_h = int(infoObject.current_h/1.5)
+
+bass_band = FrequencyBand(lower_bound=0,
+                          upper_bound=300,
+                          song_frequencies=bass_frequencies,
+                          base_color=(255, 0, 0),
+                          min_height=0,
+                          max_height= 0.5 * screen_h,
+                          screen_w=screen_w,
+                          screen_h=screen_h)
+
+mid_band = FrequencyBand(lower_bound=300,
+                         upper_bound=4000,
+                         song_frequencies=mid_frequencies,
+                         base_color=(0, 255, 0),
+                         min_height=screen_h * 0.25,
+                         max_height=screen_h * 0.75,
+                         screen_w=screen_w,
+                         screen_h=screen_h)
+
+treble_band = FrequencyBand(lower_bound=4000,
+                            upper_bound=8000,
+                            song_frequencies=treble_frequencies,
+                            base_color=(0, 0, 255),
+                            min_height=screen_h * 0.5,
+                            max_height=screen_h,
+                            screen_w=screen_w,
+                            screen_h=screen_h)
 
 # Set up the drawing window
 screen = pygame.display.set_mode([screen_w, screen_h])
-
-
-bars = []
-
-
-frequencies = np.arange(100, 8000, 100)
-
-r = len(frequencies)
-
-
-width = screen_w/r
-
-
-x = (screen_w - width*r)/2
-
-for c in frequencies:
-    bars.append(AudioBar(x, 300, c, (255, 0, 0), max_height=400, width=width))
-    x += width
 
 t = pygame.time.get_ticks()
 getTicksLastFrame = t
@@ -118,9 +91,13 @@ while running:
     # Fill the background with white
     screen.fill((255, 255, 255))
 
-    for b in bars:
-        b.update(deltaTime, get_decibel(pygame.mixer.music.get_pos()/1000.0, b.freq))
-        b.render(screen)
+    for bass, mid, treble in zip(bass_band.bars, mid_band.bars, treble_band.bars):
+        bass.update(deltaTime, get_decibel(pygame.mixer.music.get_pos()/1000.0, bass.freq, bass_band.frequency_index_ratio))
+        mid.update(deltaTime, get_decibel(pygame.mixer.music.get_pos()/1000.0, mid.freq, mid_band.frequency_index_ratio))
+        treble.update(deltaTime, get_decibel(pygame.mixer.music.get_pos()/1000.0, treble.freq, treble_band.frequency_index_ratio))
+        treble.render(screen)
+        mid.render(screen)
+        bass.render(screen)
 
     # Flip the display
     pygame.display.flip()
