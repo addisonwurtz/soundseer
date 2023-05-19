@@ -14,10 +14,9 @@ class FrequencyBand:
         self.max_height = max_height
         self.width = screen_w
 
-
         self.frequency_ranges = self.get_frequency_range()
         self.frequency_index_ratio = self.get_frequency_index_ratio()
-
+        print(self.frequency_index_ratio)
         self.bars = []
         self.get_bars(screen_h)
 

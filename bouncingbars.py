@@ -11,7 +11,8 @@ def get_decibel(target_time, freq, frequencies_index_ratio):
 
 # TODO: add command line args for filename (and other knobs??)
 # filename = "Songs/LanaDelRey-DietMountainDew(OfficialInstrumental).mp3"
-filename = "Songs/MKDomDolla-RhymeDust.mp3"
+# filename = "Songs/MKDomDolla-RhymeDust.mp3"
+filename = "Songs/Moby-'Porcelain'.mp3"
 
 time_series, sample_rate = librosa.load(filename)  # getting information from the file
 
@@ -20,10 +21,10 @@ stft = np.abs(librosa.stft(time_series, hop_length=512, n_fft=2048*4))
 
 spectrogram = librosa.amplitude_to_db(stft, ref=np.max)  # converting the matrix to decibel matrix
 
-freqs = librosa.core.fft_frequencies(n_fft=2048 * 4)  # getting an array of frequencies
+frequencies = librosa.core.fft_frequencies(n_fft=2048 * 4)  # getting an array of frequencies
 
 # split into frequency bands
-bass_frequencies, mid_frequencies, treble_frequencies = np.split(freqs, [300, 4000])
+bass_frequencies, mid_frequencies, treble_frequencies = np.split(frequencies, [300, 4000])
 
 # getting an array of time periodic
 times = librosa.core.frames_to_time(np.arange(spectrogram.shape[1]), sr=sample_rate, hop_length=512, n_fft=2048*4)
@@ -53,7 +54,7 @@ mid_band = FrequencyBand(lower_bound=300,
                          song_frequencies=mid_frequencies,
                          base_color=(0, 255, 0),
                          min_height=screen_h * 0.25,
-                         max_height=screen_h * 0.75,
+                         max_height=screen_h * 0.9,
                          screen_w=screen_w,
                          screen_h=screen_h)
 
@@ -90,6 +91,7 @@ while running:
 
     # Fill the background with white
     screen.fill((255, 255, 255))
+    # screen.fill((0, 0, 0))
 
     for bass, mid, treble in zip(bass_band.bars, mid_band.bars, treble_band.bars):
         bass.update(deltaTime, get_decibel(pygame.mixer.music.get_pos()/1000.0, bass.freq, bass_band.frequency_index_ratio))
