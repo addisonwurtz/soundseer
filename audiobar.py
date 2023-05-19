@@ -14,13 +14,15 @@ def clamp(min_value, max_value, value):
 
 class AudioBar:
 
-    def __init__(self, x, y, freq, color, width=50, min_height=10, max_height=100, min_decibel=-80, max_decibel=0):
+    def __init__(self, x, y, freq, color, width=50, angle=0, min_height=10, max_height=100, min_decibel=-80, max_decibel=0):
 
         self.x, self.y, self.freq = x, y, freq
 
         self.color = color
 
         self.width, self.min_height, self.max_height = width, min_height, max_height
+
+        self.angle = angle
 
         self.height = min_height
 
@@ -40,5 +42,9 @@ class AudioBar:
 
     def render(self, screen):
 
-        pygame.draw.rect(screen, self.color, (self.x, self.y - self.height, self.width, self.height),
-                         border_top_right_radius=25, border_top_left_radius=25)
+        #bar = pygame.draw.rect(screen, self.color, (self.x, self.y - self.height, self.width, self.height),
+        #                 border_top_right_radius=25, border_top_left_radius=25)
+        bar = pygame.Surface((self.width, self.height))
+        bar.fill(self.color)
+        screen.blit(bar, (self.x, self.y))
+        pygame.transform.rotate(bar, 90)
