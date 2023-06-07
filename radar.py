@@ -17,10 +17,12 @@ CENTER_Y = SCREEN_HEIGHT // 2
 RADIANS_PER_FRAME = 0.02
 SWEEP_LENGTH = 250
 
+soundfile="/Songs/DietMountainDewInstrumental.mp3"
 
 class Radar:
     def __init__(self):
         self.angle = 0
+
 
     def update(self):
 
@@ -66,6 +68,9 @@ class MyGame(arcade.Window):
 
         # Set background color
         arcade.set_background_color(arcade.color.BLACK)
+
+        song = arcade.Sound(soundfile, streaming=True)
+        song.play()
 
     def on_update(self, delta_time):
         # Move the rectangle
