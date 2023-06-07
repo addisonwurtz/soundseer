@@ -40,5 +40,5 @@ class AudioBar:
 
     def render(self, screen):
 
-        pygame.draw.rect(screen, self.color, (self.x, self.y - self.height, self.width, self.height),
+        pygame.draw.rect(screen, (self.color), (self.x, self.y - self.height, self.width, self.height),
                          border_top_right_radius=25, border_top_left_radius=25)

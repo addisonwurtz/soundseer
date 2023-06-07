@@ -5,7 +5,7 @@ import numpy as np
 class FrequencyBand:
 
     def __init__(self, lower_bound, upper_bound, song_frequencies, base_color, min_height, max_height, screen_w,
-                 screen_h, num_bars=20):
+                 screen_h, num_bars):
         self.lower_bound, self.upper_bound = lower_bound, upper_bound
         self.num_bars = num_bars
         self.song_frequencies = song_frequencies
