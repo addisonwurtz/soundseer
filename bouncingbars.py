@@ -55,106 +55,108 @@ parser.add_argument(
     default="255,255,255"
 )
 
-args = parser.parse_args()
 
 def get_decibel(target_time, freq, frequencies_index_ratio):
     return spectrogram[int(freq * frequencies_index_ratio)][int(target_time * time_index_ratio)]
 
+if __name__ == '__main__':
 
-time_series, sample_rate = librosa.load(args.filename)  # getting information from the file
+    args = parser.parse_args()
 
-# getting a matrix which contains amplitude values according to frequency and time indexes
-stft = np.abs(librosa.stft(time_series, hop_length=512, n_fft=2048*4))
+    time_series, sample_rate = librosa.load(args.filename)  # getting information from the file
 
-spectrogram = librosa.amplitude_to_db(stft, ref=np.max)  # converting the matrix to decibel matrix
+    # getting a matrix which contains amplitude values according to frequency and time indexes
+    stft = np.abs(librosa.stft(time_series, hop_length=512, n_fft=2048*4))
 
-frequencies = librosa.core.fft_frequencies(n_fft=2048 * 4)  # getting an array of frequencies
+    spectrogram = librosa.amplitude_to_db(stft, ref=np.max)  # converting the matrix to decibel matrix
 
-# split into frequency bands
-bass_frequencies, mid_frequencies, treble_frequencies = np.split(frequencies, [BASS_CUTOFF, TREBLE_CUTOFF])
+    frequencies = librosa.core.fft_frequencies(n_fft=2048 * 4)  # getting an array of frequencies
 
-# getting an array of time periodic
-times = librosa.core.frames_to_time(np.arange(spectrogram.shape[1]), sr=sample_rate, hop_length=512, n_fft=2048*4)
+    # split into frequency bands
+    bass_frequencies, mid_frequencies, treble_frequencies = np.split(frequencies, [BASS_CUTOFF, TREBLE_CUTOFF])
 
-time_index_ratio = len(times)/times[len(times) - 1]
+    # getting an array of time periodic
+    times = librosa.core.frames_to_time(np.arange(spectrogram.shape[1]), sr=sample_rate, hop_length=512, n_fft=2048*4)
+
+    time_index_ratio = len(times)/times[len(times) - 1]
 
 
 
-pygame.init()
+    pygame.init()
 
-infoObject = pygame.display.Info()
+    infoObject = pygame.display.Info()
 
-screen_w = int(infoObject.current_w)
-screen_h = int(infoObject.current_h / 1.1)
+    screen_w = int(infoObject.current_w)
+    screen_h = int(infoObject.current_h / 1.1)
 
-background_color = pygame.Color(list(map(int, args.background_color.split(","))))
+    background_color = pygame.Color(list(map(int, args.background_color.split(","))))
 
-bass_band = FrequencyBand(lower_bound=0,
-                          upper_bound=BASS_CUTOFF,
-                          song_frequencies=bass_frequencies,
-                          base_color=args.bass_color,
-                          min_height=0,
-                          max_height= 0.5 * screen_h,
-                          screen_w=screen_w,
-                          screen_h=screen_h,
-                          num_bars=args.bass_bars)
+    bass_band = FrequencyBand(lower_bound=0,
+                              upper_bound=BASS_CUTOFF,
+                              song_frequencies=bass_frequencies,
+                              base_color=args.bass_color,
+                              min_height=0,
+                              max_height= 0.5 * screen_h,
+                              screen_w=screen_w,
+                              screen_h=screen_h,
+                              num_bars=args.bass_bars)
 
-mid_band = FrequencyBand(lower_bound=BASS_CUTOFF,
-                         upper_bound=TREBLE_CUTOFF,
-                         song_frequencies=mid_frequencies,
-                         base_color=args.mid_color,
-                         min_height=screen_h * 0.25,
-                         max_height=screen_h * 0.9,
-                         screen_w=screen_w,
-                         screen_h=screen_h,
-                         num_bars=args.mid_bars)
+    mid_band = FrequencyBand(lower_bound=BASS_CUTOFF,
+                             upper_bound=TREBLE_CUTOFF,
+                             song_frequencies=mid_frequencies,
+                             base_color=args.mid_color,
+                             min_height=screen_h * 0.25,
+                             max_height=screen_h * 0.9,
+                             screen_w=screen_w,
+                             screen_h=screen_h,
+                             num_bars=args.mid_bars)
 
-treble_band = FrequencyBand(lower_bound=TREBLE_CUTOFF,
-                            upper_bound=20000,
-                            song_frequencies=treble_frequencies,
-                            base_color=args.treble_color,
-                            min_height=screen_h * 0.5,
-                            max_height=screen_h,
-                            screen_w=screen_w,
-                            screen_h=screen_h,
-                            num_bars=args.treble_bars)
+    treble_band = FrequencyBand(lower_bound=TREBLE_CUTOFF,
+                                upper_bound=20000,
+                                song_frequencies=treble_frequencies,
+                                base_color=args.treble_color,
+                                min_height=screen_h * 0.5,
+                                max_height=screen_h,
+                                screen_w=screen_w,
+                                screen_h=screen_h,
+                                num_bars=args.treble_bars)
 
-# Set up the drawing window
-screen = pygame.display.set_mode([screen_w, screen_h])
-
-t = pygame.time.get_ticks()
-getTicksLastFrame = t
-
-pygame.mixer.music.load(args.filename)
-pygame.mixer.music.play(0)
-
-# Run until the user asks to quit
-running = True
-while running:
+    # Set up the drawing window
+    screen = pygame.display.set_mode([screen_w, screen_h])
 
     t = pygame.time.get_ticks()
-    deltaTime = (t - getTicksLastFrame) / 1000.0
     getTicksLastFrame = t
 
-    # Did the user click the window close button?
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
+    pygame.mixer.music.load(args.filename)
+    pygame.mixer.music.play(0)
 
-    screen.fill(background_color)
+    # Run until the user asks to quit
+    running = True
+    while running:
 
-    for treble in treble_band.bars:
-        treble.update(deltaTime, get_decibel(pygame.mixer.music.get_pos()/1000.0, treble.freq, treble_band.frequency_index_ratio))
-        treble.render(screen)
-    for mid in mid_band.bars:
-        mid.update(deltaTime, get_decibel(pygame.mixer.music.get_pos()/1000.0, mid.freq, mid_band.frequency_index_ratio))
-        mid.render(screen)
-    for bass in bass_band.bars:
-        bass.update(deltaTime, get_decibel(pygame.mixer.music.get_pos()/1000.0, bass.freq, bass_band.frequency_index_ratio))
-        bass.render(screen)
+        t = pygame.time.get_ticks()
+        deltaTime = (t - getTicksLastFrame) / 1000.0
+        getTicksLastFrame = t
 
-    # Flip the display
-    pygame.display.flip()
+        # Did the user click the window close button?
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
 
-# Done! Time to quit.
-pygame.quit()
+        screen.fill(background_color)
+
+        for treble in treble_band.bars:
+            treble.update(deltaTime, get_decibel(pygame.mixer.music.get_pos()/1000.0, treble.freq, treble_band.frequency_index_ratio))
+            treble.render(screen)
+        for mid in mid_band.bars:
+            mid.update(deltaTime, get_decibel(pygame.mixer.music.get_pos()/1000.0, mid.freq, mid_band.frequency_index_ratio))
+            mid.render(screen)
+        for bass in bass_band.bars:
+            bass.update(deltaTime, get_decibel(pygame.mixer.music.get_pos()/1000.0, bass.freq, bass_band.frequency_index_ratio))
+            bass.render(screen)
+
+        # Flip the display
+        pygame.display.flip()
+
+    # Done! Time to quit.
+    pygame.quit()
