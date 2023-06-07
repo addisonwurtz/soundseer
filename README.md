@@ -44,5 +44,7 @@ Within a particular ecosystem, there may be a common way of installing things, s
 ## References 
 https://gitlab.com/avirzayev/medium-audio-visualizer-code/-/blob/master/main.py
 
+https://api.arcade.academy/en/stable/examples/radar_sweep.html#radar-sweep
+
 ## License
 [MIT License](/LICENSE)
