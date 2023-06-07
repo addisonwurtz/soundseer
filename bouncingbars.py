@@ -1,10 +1,10 @@
 import argparse
-
 import librosa
 import numpy as np
 import pygame
+import pygame as pygame
+
 from frequencyband import FrequencyBand
-from itertools import zip_longest
 
 BASS_CUTOFF = 300
 TREBLE_CUTOFF = 4000
@@ -34,9 +34,27 @@ parser.add_argument(
     default=20,
     type=int
 )
-# number of bars
-# colors
-# opacity ?
+parser.add_argument(
+    "--bass_color",
+    help="Color of bass range bars, 'r,g,b'",
+    default="255,0,0",
+)
+parser.add_argument(
+    "--mid_color",
+    help="Color of mid range bars, 'r,g,b'",
+    default="0,255,0",
+)
+parser.add_argument(
+    "--treble_color",
+    help="Color of treble range bars, 'r,g,b'",
+    default="0,0,255",
+)
+parser.add_argument(
+    "--background_color",
+    help="Color of background, 'r,g,b'",
+    default="255,255,255"
+)
+
 args = parser.parse_args()
 
 def get_decibel(target_time, freq, frequencies_index_ratio):
@@ -69,10 +87,12 @@ infoObject = pygame.display.Info()
 screen_w = int(infoObject.current_w/1.5)
 screen_h = int(infoObject.current_h/1.5)
 
+background_color = pygame.Color(list(map(int, args.background_color.split(","))))
+
 bass_band = FrequencyBand(lower_bound=0,
                           upper_bound=BASS_CUTOFF,
                           song_frequencies=bass_frequencies,
-                          base_color=(255, 0, 0),
+                          base_color=args.bass_color,
                           min_height=0,
                           max_height= 0.5 * screen_h,
                           screen_w=screen_w,
@@ -82,7 +102,7 @@ bass_band = FrequencyBand(lower_bound=0,
 mid_band = FrequencyBand(lower_bound=BASS_CUTOFF,
                          upper_bound=TREBLE_CUTOFF,
                          song_frequencies=mid_frequencies,
-                         base_color=(0, 255, 0),
+                         base_color=args.mid_color,
                          min_height=screen_h * 0.25,
                          max_height=screen_h * 0.9,
                          screen_w=screen_w,
@@ -92,7 +112,7 @@ mid_band = FrequencyBand(lower_bound=BASS_CUTOFF,
 treble_band = FrequencyBand(lower_bound=TREBLE_CUTOFF,
                             upper_bound=20000,
                             song_frequencies=treble_frequencies,
-                            base_color=pygame.Color(0, 0, 255),
+                            base_color=args.treble_color,
                             min_height=screen_h * 0.5,
                             max_height=screen_h,
                             screen_w=screen_w,
@@ -121,9 +141,7 @@ while running:
         if event.type == pygame.QUIT:
             running = False
 
-    # Fill the background with white
-    screen.fill((255, 255, 255))
-    # screen.fill((0, 0, 0))
+    screen.fill(background_color)
 
     for treble in treble_band.bars:
         treble.update(deltaTime, get_decibel(pygame.mixer.music.get_pos()/1000.0, treble.freq, treble_band.frequency_index_ratio))

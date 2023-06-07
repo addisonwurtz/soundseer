@@ -1,3 +1,5 @@
+import pygame
+
 from audiobar import AudioBar
 import numpy as np
 
@@ -9,14 +11,14 @@ class FrequencyBand:
         self.lower_bound, self.upper_bound = lower_bound, upper_bound
         self.num_bars = num_bars
         self.song_frequencies = song_frequencies
-        self.base_color = base_color
+        self.base_color = pygame.Color(list(map(int, base_color.split(","))))
+
         self.min_height = min_height
         self.max_height = max_height
         self.width = screen_w
 
         self.frequency_ranges = self.get_frequency_range()
         self.frequency_index_ratio = self.get_frequency_index_ratio()
-        print(self.frequency_index_ratio)
         self.bars = []
         self.get_bars(screen_h)
 
