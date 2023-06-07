@@ -14,7 +14,7 @@ def clamp(min_value, max_value, value):
 
 class AudioBar:
 
-    def __init__(self, x, y, freq, color, width=50, min_height=10, max_height=100, min_decibel=-80, max_decibel=0):
+    def __init__(self, x, y, freq, color, width=50, min_height=10, max_height=100, min_decibel=-80, max_decibel=0, border_radius=25):
 
         self.x, self.y, self.freq = x, y, freq
 
@@ -25,6 +25,8 @@ class AudioBar:
         self.height = min_height
 
         self.min_decibel, self.max_decibel = min_decibel, max_decibel
+
+        self.border_radius = border_radius
 
         self.__decibel_height_ratio = (self.max_height - self.min_height)/(self.max_decibel - self.min_decibel)
 
@@ -41,4 +43,4 @@ class AudioBar:
     def render(self, screen):
 
         pygame.draw.rect(screen, self.color, (self.x, self.y - self.height, self.width, self.height),
-                         border_top_right_radius=25, border_top_left_radius=25)
+                         border_top_right_radius=self.border_radius, border_top_left_radius=self.border_radius)

@@ -84,8 +84,8 @@ pygame.init()
 
 infoObject = pygame.display.Info()
 
-screen_w = int(infoObject.current_w/1.5)
-screen_h = int(infoObject.current_h/1.5)
+screen_w = int(infoObject.current_w)
+screen_h = int(infoObject.current_h / 1.1)
 
 background_color = pygame.Color(list(map(int, args.background_color.split(","))))
 
