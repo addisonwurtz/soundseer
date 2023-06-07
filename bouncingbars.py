@@ -1,20 +1,31 @@
+import argparse
+
 import librosa
 import numpy as np
 import pygame
 from audiobar import AudioBar
 from frequencyband import FrequencyBand
 
+parser = argparse.ArgumentParser(prog='BouncingBars',
+                                 description='Music visualizer that animates the changing amplitudes of configurable '
+                                             'frequency bands to chosen sound file.')
+parser.add_argument(
+    "filename",
+    help="Name of audio file to visualize (mp3)"
+)
+
+args = parser.parse_args()
 
 def get_decibel(target_time, freq, frequencies_index_ratio):
     return spectrogram[int(freq * frequencies_index_ratio)][int(target_time * time_index_ratio)]
 
 
 # TODO: add command line args for filename (and other knobs??)
-# filename = "Songs/LanaDelRey-DietMountainDew(OfficialInstrumental).mp3"
+#filename = "Songs/LanaDelRey-DietMountainDew(OfficialInstrumental).mp3"
 # filename = "Songs/MKDomDolla-RhymeDust.mp3"
-filename = "Songs/Moby-'Porcelain'.mp3"
+#filename = "Songs/Moby-'Porcelain'.mp3"
 
-time_series, sample_rate = librosa.load(filename)  # getting information from the file
+time_series, sample_rate = librosa.load(args.filename)  # getting information from the file
 
 # getting a matrix which contains amplitude values according to frequency and time indexes
 stft = np.abs(librosa.stft(time_series, hop_length=512, n_fft=2048*4))
@@ -73,7 +84,7 @@ screen = pygame.display.set_mode([screen_w, screen_h])
 t = pygame.time.get_ticks()
 getTicksLastFrame = t
 
-pygame.mixer.music.load(filename)
+pygame.mixer.music.load(args.filename)
 pygame.mixer.music.play(0)
 
 # Run until the user asks to quit

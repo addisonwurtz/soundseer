@@ -21,6 +21,10 @@ Use examples liberally, and show the expected output if you can. It's helpful to
 ## Roadmap
 If you have ideas for releases in the future, it is a good idea to list them in the README.
 
+### Beat detection visualizer + pyarcade radar sweet
+### Keys to notes visualizer using colors for notes ... "raindrops" (pyarcare lights tutorial??)
+### Pyarcade glow shader???
+### Make a sidescrolling animate?
 ## References 
 https://gitlab.com/avirzayev/medium-audio-visualizer-code/-/blob/master/main.py
 
