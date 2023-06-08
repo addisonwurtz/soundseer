@@ -1,7 +1,6 @@
 import argparse
 import librosa
 import numpy as np
-import pygame
 import pygame as pygame
 
 from frequencyband import FrequencyBand

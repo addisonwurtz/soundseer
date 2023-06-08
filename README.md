@@ -1,16 +1,24 @@
-# Soundseer: 
-By Addison Wurtz
+# Soundseer 
+### By Addison Wurtz
 
 ***
 
-## Description: 
-Soundseer is a music visualizer that uses python animation libraries in conjunction with librosa to generate and play
-custom animations for mp3 files. 
-Soundseer 
+## Description 
+Soundseer is a music visualizer that uses librosa to analyze sound files and create custom animations for mp3 files. 
+Soundseer includes visualizers from pygame and python arcade. 
 
-## Example Configurations 
-I've included some screenshots along with the commands to generate that configuration. I have included a few example 
-songs in the repository to ensure that these examples will run out-of-the-box.
+The "bouncing bars" visualizer uses a spectrogram for each animation frame. The amplitude of various frequency "buckets" 
+are then animated in the form of three audio bars--representing the bass, mid, and treble frequencies. Each audio bar
+has a configurable number of frequency bars. Additionally, all the colors are configurable.
+
+While working on my first animation, it became clear that pygame offered fairly limited options for expansion. After 
+some searching I came across python arcade. It has much more visually complex rendering capabilities and build in tools.
+At this time, I am working on building a visualizer in arcade using librosa's beat and note detection tools. 
+
+## Pygame Examples
+I've included some screenshots along with the commands to generate that configuration. There are example 
+songs in the repository to ensure that these commands will run out-of-the-box.
+
 ### Default:
 ```
 python bouncingbars.py Songs\Moby-Porcelain.mp3
@@ -31,20 +39,38 @@ python bouncingbars.py Songs\MKDomDolla-RhymeDust.mp3 --bass_bars 12 --mid_bars 
 ```
 ![Screenshot from visualizer with custom colors](screenshots/yellow.jpg)
 
+## Python Arcade Examples
+
+### Beat Radar:
+
+***
+
 ## Dependencies
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
+Soundseer uses librosa, pygame, Python Arcade, PyGame, and NumPy
+
+`pip install librosa`
+
+`pip install pygame`
+
+`pip install arcade`
+
+`pip install numpy`
+
+***
 
 ## Roadmap
 
-- Beat detection visualizer + pyarcade radar sweet
-- Keys to notes visualizer using colors for notes ... "raindrops" (pyarcare lights tutorial??)
-- Pyarcade glow shader???
-- Make a sidescrolling animation?
+- Beat detection visualizer + pyarcade radar sweep
+- Keys to notes visualizer using colors for notes ... "raindrops" (arcade lights)
+- Arcade glow shader???
+- Make a side-scrolling animation?
+
+***
 
 ## References 
-https://gitlab.com/avirzayev/medium-audio-visualizer-code/-/blob/master/main.py
+[Music Visualizer Tutorial](https://gitlab.com/avirzayev/medium-audio-visualizer-code/-/blob/master/main.py)
 
-https://api.arcade.academy/en/stable/examples/radar_sweep.html#radar-sweep
+[Arcade Radar Tutorial](https://api.arcade.academy/en/stable/examples/radar_sweep.html#radar-sweep)
 
 ## License
-[MIT License](/LICENSE)
+[MIT License](/LICENSE.md)
