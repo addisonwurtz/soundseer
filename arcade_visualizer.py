@@ -38,7 +38,6 @@ class MyGame(arcade.Window):
 
         self.update_rate = UPDATE_RATE
         self.set_update_rate(UPDATE_RATE)
-        self.time = -1
 
         # Create our rectangle
         self.radar = radar
@@ -48,6 +47,7 @@ class MyGame(arcade.Window):
 
         song = arcade.Sound(soundfile, streaming=True)
         song.play()
+        self.time = -2 * self.update_rate
 
     def on_update(self, delta_time):
         # Move the rectangle

@@ -6,7 +6,7 @@ import arcade
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
 SCREEN_TITLE = "Soundseer"
-UPDATE_RATE = 0.016666666666666666
+UPDATE_RATE = 0.016666
 CENTER_X = SCREEN_WIDTH // 2
 CENTER_Y = SCREEN_HEIGHT // 2
 RADIANS_PER_FRAME = 0.02
@@ -49,7 +49,7 @@ class Radar:
         print("beat time: " + str(beat_time))
         print("game time: " + str(time))
         print()
-        if beat_time - buffer < time:
+        if beat_time - UPDATE_RATE < time:
             print("On beat")
             arcade.draw_circle_outline(CENTER_X,
                                        CENTER_Y,
@@ -57,7 +57,7 @@ class Radar:
                                        arcade.color.ELECTRIC_ULTRAMARINE,
                                        border_width=40,
                                        num_segments=60)
-            if time > beat_time + 2 * buffer:
+            if time > beat_time + 5 * UPDATE_RATE:
                 self.next_beat = next(self.beats)
         else:
             arcade.draw_circle_outline(CENTER_X,
