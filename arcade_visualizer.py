@@ -3,14 +3,15 @@ import math
 import tkinter
 
 import librosa.beat
-import numpy
+import librosa.feature
+import numpy as np
 
 from radar import Radar
 
 root = tkinter.Tk()
 
-SCREEN_WIDTH = 800
-SCREEN_HEIGHT = 600
+SCREEN_WIDTH = 1200
+SCREEN_HEIGHT = 800
 SCREEN_TITLE = "Soundseer"
 UPDATE_RATE = 1 / 60
 
@@ -24,7 +25,8 @@ RADIANS_PER_FRAME = 0.02
 SWEEP_LENGTH = 250
 
 soundfile = "Songs/MKDomDolla-RhymeDust.mp3"
-# soundfile = "Songs/155BPM.mp3"
+#soundfile = "Songs/155BPM.mp3"
+#soundfile = "Songs/DietMountainDewInstrumental.mp3"
 
 
 class MyGame(arcade.Window):
@@ -100,9 +102,10 @@ def main():
     time_series, sample_rate = librosa.load(soundfile)
 
     bpm, beats = librosa.beat.beat_track(y=time_series, sr=sample_rate, units='time')
-    print("bpm: " + str(bpm))
-    print(beats)
 
+    print("bpm: " + str(bpm))
+    # print(beats)
+    # print(tempogram)
     radar = Radar(UPDATE_RATE, bpm, beats)
     MyGame(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_TITLE, radar)
 

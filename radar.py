@@ -3,8 +3,8 @@ import math
 import arcade
 
 # These constants control the particulars about the radar
-SCREEN_WIDTH = 800
-SCREEN_HEIGHT = 600
+SCREEN_WIDTH = 1200
+SCREEN_HEIGHT = 800
 SCREEN_TITLE = "Soundseer"
 UPDATE_RATE = 0.016666
 CENTER_X = SCREEN_WIDTH // 2
@@ -16,7 +16,7 @@ SWEEP_LENGTH = 250
 class Radar:
     def __init__(self, update_rate, bpm, beats):
         self.angle = 0
-        self.radians_per_frame = bpm * update_rate * (numpy.pi / 60)
+        self.radians_per_frame = bpm * update_rate * (numpy.pi / 120)
         print("radians / frame: " + str(self.radians_per_frame))
         self.beats = iter(beats)
         self.next_beat = next(self.beats)
@@ -39,23 +39,24 @@ class Radar:
         # Draw the radar line
         if self.angle % numpy.pi < 1:
             arcade.draw_line(CENTER_X, CENTER_Y, x, y, arcade.color.BARBIE_PINK, 10)
+        elif self.angle % numpy.pi < 2:
+            arcade.draw_line(CENTER_X, CENTER_Y, x, y, arcade.color.FLUORESCENT_YELLOW, 4)
         else:
-            arcade.draw_line(CENTER_X, CENTER_Y, x, y, arcade.color.AMBER, 4)
+            arcade.draw_line(CENTER_X, CENTER_Y, x, y, arcade.color.AMBER, 6)
 
         # Draw the outline of the radar
         beat_time = round(self.next_beat, 5)
         buffer = 0.04
         time = round(time, 5)
-        print("beat time: " + str(beat_time))
-        print("game time: " + str(time))
-        print()
+        # print("beat time: " + str(beat_time))
+        # print("game time: " + str(time))
+        # print()
         if beat_time - UPDATE_RATE < time:
-            print("On beat")
             arcade.draw_circle_outline(CENTER_X,
                                        CENTER_Y,
-                                       SWEEP_LENGTH,
-                                       arcade.color.ELECTRIC_ULTRAMARINE,
-                                       border_width=40,
+                                       1.5 * SWEEP_LENGTH,
+                                       (63, 0, 255, 150),
+                                       border_width= 80,
                                        num_segments=60)
             if time > beat_time + 5 * UPDATE_RATE:
                 self.next_beat = next(self.beats)
