@@ -23,6 +23,8 @@ songs in the repository to ensure that these commands will run out-of-the-box.
 ```
 python bouncingbars.py Songs\Moby-Porcelain.mp3
 ```
+<img src="screenshots/default.jpg" alt="drawing" style="width:800px">
+
 ![Screenshot from visualizer with default settings](screenshots/default.jpg)
 
 ### Shades of purple with custom number of frequency bars:
