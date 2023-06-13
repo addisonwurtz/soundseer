@@ -1,3 +1,4 @@
+import librosa.util
 import numpy
 import math
 import arcade
@@ -14,12 +15,17 @@ SWEEP_LENGTH = 250
 
 
 class Radar:
-    def __init__(self, update_rate, bpm, beats):
+    def __init__(self, update_rate, bpm, beats, times, pulse):
         self.angle = 0
         self.radians_per_frame = bpm * update_rate * (numpy.pi / 120)
         print("radians / frame: " + str(self.radians_per_frame))
-        self.beats = iter(beats)
-        self.next_beat = next(self.beats)
+        #self.beats = iter(beats)
+        #self.next_beat = next(self.beats)
+
+        self.times = iter(times)
+        self.next_time = next(self.times)
+        self.pulse = iter(pulse)
+        self.next_pulse = next(self.pulse)
 
     def update(self):
         # Move the angle of the sweep.
@@ -29,31 +35,26 @@ class Radar:
         """ Use this function to draw everything to the screen. """
 
         # Calculate the end point of our radar sweep. Using math.
-        x = SWEEP_LENGTH * math.sin(self.angle) + CENTER_X
-        y = SWEEP_LENGTH * math.cos(self.angle) + CENTER_Y
+        x = (SWEEP_LENGTH + 100 * self.next_pulse) * math.sin(self.angle) + CENTER_X
+        y = (SWEEP_LENGTH + 100 * self.next_pulse) * math.cos(self.angle) + CENTER_Y
 
         # Start the render. This must happen before any drawing
         # commands. We do NOT need a stop render command.
         arcade.start_render()
 
-        # Draw the radar line
-        if self.angle % numpy.pi < 1:
-            arcade.draw_line(CENTER_X, CENTER_Y, x, y, arcade.color.BARBIE_PINK, 8)
-        elif self.angle % numpy.pi < 2:
-            arcade.draw_line(CENTER_X, CENTER_Y, x, y, arcade.color.FLUORESCENT_YELLOW, 12)
-        else:
-            arcade.draw_line(CENTER_X, CENTER_Y, x, y, arcade.color.AMBER, 6)
+
 
         # Draw the outline of the radar
-        if self.next_beat - UPDATE_RATE < song.get_stream_position(player):
+        if self.next_time - UPDATE_RATE < song.get_stream_position(player):
             arcade.draw_circle_outline(CENTER_X,
                                        CENTER_Y,
-                                       1.5 * SWEEP_LENGTH,
-                                       (63, 0, 255, 150),
-                                       border_width= 100,
+                                        SWEEP_LENGTH + 100 * self.next_pulse,
+                                       (100 + self.next_pulse * 100, 10, 255 - self.next_pulse * 100, 100 * self.next_pulse + 100),
+                                       border_width=600 + 100 * self.next_pulse,
                                        num_segments=60)
-            if song.get_stream_position(player) > self.next_beat+ 5 * UPDATE_RATE:
-                self.next_beat = next(self.beats)
+            if song.get_stream_position(player) > self.next_time + 3 * UPDATE_RATE:
+                self.next_time = next(self.times)
+                self.next_pulse = next(self.pulse)
         else:
             arcade.draw_circle_outline(CENTER_X,
                                        CENTER_Y,
@@ -61,3 +62,11 @@ class Radar:
                                        arcade.color.ELECTRIC_ULTRAMARINE,
                                        border_width=10,
                                        num_segments=60)
+
+        # Draw the radar line
+        if self.angle % numpy.pi < 1:
+            arcade.draw_line(CENTER_X, CENTER_Y, x, y, arcade.color.BARBIE_PINK, 6)
+        elif self.angle % numpy.pi < 2:
+            arcade.draw_line(CENTER_X, CENTER_Y, x, y, arcade.color.FLUORESCENT_YELLOW, 8)
+        else:
+            arcade.draw_line(CENTER_X, CENTER_Y, x, y, arcade.color.AMBER, 4)

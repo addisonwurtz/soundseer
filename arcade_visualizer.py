@@ -26,7 +26,9 @@ SWEEP_LENGTH = 250
 
 #soundfile = "Songs/MKDomDolla-RhymeDust.mp3"
 #soundfile = "Songs/155BPM.mp3"
-soundfile = "Songs/DietMountainDewInstrumental.mp3"
+#soundfile = "Songs/DietMountainDewInstrumental.mp3"
+soundfile = "Songs/Moby-Porcelain.mp3"
+
 
 
 class MyGame(arcade.Window):
@@ -65,7 +67,7 @@ class MyGame(arcade.Window):
         # Get viewport dimensions
         left, screen_width, bottom, screen_height = self.get_viewport()
 
-        text_size = 12
+        text_size = 10
         # Draw text on the screen so the user has an idea of what is happening
         arcade.draw_text("Press F to toggle between full screen and windowed mode, unstretched.",
                          screen_width // 2, 10,
@@ -99,12 +101,18 @@ def main():
     """ Main function """
     time_series, sample_rate = librosa.load(soundfile)
 
-    bpm, beats = librosa.beat.beat_track(y=time_series, sr=sample_rate, units='time')
+    onset_env = librosa.onset.onset_strength(y=time_series, sr=sample_rate)
+    tempo, beats = librosa.beat.beat_track(y=time_series, sr=sample_rate, units='time')
 
-    print("bpm: " + str(bpm))
+    pulse = librosa.util.normalize(librosa.beat.plp(onset_envelope=onset_env, sr=sample_rate))
+    #beats_plp = np.flatnonzero(librosa.util.localmax(pulse))
+    times = librosa.times_like(pulse, sr=sample_rate)
+    #times = librosa.times_like(beats_plp, sr=sample_rate)
+
+    print("bpm: " + str(tempo))
     # print(beats)
     # print(tempogram)
-    radar = Radar(UPDATE_RATE, bpm, beats)
+    radar = Radar(UPDATE_RATE, tempo, beats, times, pulse)
     MyGame(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_TITLE, radar)
 
     arcade.run()
