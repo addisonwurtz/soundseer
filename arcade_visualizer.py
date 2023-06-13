@@ -25,9 +25,10 @@ RADIANS_PER_FRAME = 0.02
 SWEEP_LENGTH = 250
 
 #soundfile = "Songs/MKDomDolla-RhymeDust.mp3"
-#soundfile = "Songs/155BPM.mp3"
+soundfile = "Songs/60BPM.mp3"
 #soundfile = "Songs/DietMountainDewInstrumental.mp3"
-soundfile = "Songs/Moby-Porcelain.mp3"
+#soundfile = "Songs/Moby-Porcelain.mp3"
+#soundfile = "Songs/MassiveAttack-Teardrop.mp3"
 
 
 
@@ -105,13 +106,11 @@ def main():
     tempo, beats = librosa.beat.beat_track(y=time_series, sr=sample_rate, units='time')
 
     pulse = librosa.util.normalize(librosa.beat.plp(onset_envelope=onset_env, sr=sample_rate))
-    #beats_plp = np.flatnonzero(librosa.util.localmax(pulse))
     times = librosa.times_like(pulse, sr=sample_rate)
-    #times = librosa.times_like(beats_plp, sr=sample_rate)
 
     print("bpm: " + str(tempo))
-    # print(beats)
-    # print(tempogram)
+    print(pulse[:50])
+
     radar = Radar(UPDATE_RATE, tempo, beats, times, pulse)
     MyGame(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_TITLE, radar)
 

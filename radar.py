@@ -19,8 +19,6 @@ class Radar:
         self.angle = 0
         self.radians_per_frame = bpm * update_rate * (numpy.pi / 120)
         print("radians / frame: " + str(self.radians_per_frame))
-        #self.beats = iter(beats)
-        #self.next_beat = next(self.beats)
 
         self.times = iter(times)
         self.next_time = next(self.times)
@@ -46,13 +44,21 @@ class Radar:
 
         # Draw the outline of the radar
         if self.next_time - UPDATE_RATE < song.get_stream_position(player):
-            arcade.draw_circle_outline(CENTER_X,
-                                       CENTER_Y,
-                                        SWEEP_LENGTH + 100 * self.next_pulse,
-                                       (100 + self.next_pulse * 100, 10, 255 - self.next_pulse * 100, 100 * self.next_pulse + 100),
-                                       border_width=600 + 100 * self.next_pulse,
-                                       num_segments=60)
-            if song.get_stream_position(player) > self.next_time + 3 * UPDATE_RATE:
+            if self.next_pulse > 0.05:
+                arcade.draw_circle_outline(CENTER_X,
+                                           CENTER_Y,
+                                            SWEEP_LENGTH + 100 * self.next_pulse,
+                                           (100 + self.next_pulse * 100, 10, 255 - self.next_pulse * 80, 140 * self.next_pulse + 100),
+                                           border_width=600 + 100 * self.next_pulse,
+                                           num_segments=60)
+            else:
+                arcade.draw_circle_outline(CENTER_X,
+                                           CENTER_Y,
+                                           SWEEP_LENGTH,
+                                           arcade.color.ELECTRIC_ULTRAMARINE,
+                                           border_width=10,
+                                           num_segments=60)
+            if song.get_stream_position(player) > self.next_time + 5 * UPDATE_RATE:
                 self.next_time = next(self.times)
                 self.next_pulse = next(self.pulse)
         else:
