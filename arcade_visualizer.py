@@ -24,9 +24,9 @@ CENTER_Y = SCREEN_HEIGHT // 2
 RADIANS_PER_FRAME = 0.02
 SWEEP_LENGTH = 250
 
-soundfile = "Songs/MKDomDolla-RhymeDust.mp3"
+#soundfile = "Songs/MKDomDolla-RhymeDust.mp3"
 #soundfile = "Songs/155BPM.mp3"
-#soundfile = "Songs/DietMountainDewInstrumental.mp3"
+soundfile = "Songs/DietMountainDewInstrumental.mp3"
 
 
 class MyGame(arcade.Window):
@@ -47,14 +47,12 @@ class MyGame(arcade.Window):
         # Set background color
         arcade.set_background_color(arcade.color.LICORICE)
 
-        song = arcade.Sound(soundfile, streaming=True)
-        song.play()
-        self.time = -2 * self.update_rate
+        self.song = arcade.Sound(soundfile, streaming=True)
+        self.player = self.song.play()
 
     def on_update(self, delta_time):
         # Move the rectangle
-        self.radar.update(self.time)
-        self.time += delta_time
+        self.radar.update()
 
     def on_draw(self):
         """ Render the screen. """
@@ -62,7 +60,7 @@ class MyGame(arcade.Window):
         # Clear screen
         self.clear()
         # Draw the rectangle
-        self.radar.draw(self.time)
+        self.radar.draw(self.player, self.song)
 
         # Get viewport dimensions
         left, screen_width, bottom, screen_height = self.get_viewport()

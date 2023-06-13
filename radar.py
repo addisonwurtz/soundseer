@@ -21,11 +21,11 @@ class Radar:
         self.beats = iter(beats)
         self.next_beat = next(self.beats)
 
-    def update(self, time):
+    def update(self):
         # Move the angle of the sweep.
         self.angle += self.radians_per_frame
 
-    def draw(self, time):
+    def draw(self, player, song):
         """ Use this function to draw everything to the screen. """
 
         # Calculate the end point of our radar sweep. Using math.
@@ -38,27 +38,21 @@ class Radar:
 
         # Draw the radar line
         if self.angle % numpy.pi < 1:
-            arcade.draw_line(CENTER_X, CENTER_Y, x, y, arcade.color.BARBIE_PINK, 10)
+            arcade.draw_line(CENTER_X, CENTER_Y, x, y, arcade.color.BARBIE_PINK, 8)
         elif self.angle % numpy.pi < 2:
-            arcade.draw_line(CENTER_X, CENTER_Y, x, y, arcade.color.FLUORESCENT_YELLOW, 4)
+            arcade.draw_line(CENTER_X, CENTER_Y, x, y, arcade.color.FLUORESCENT_YELLOW, 12)
         else:
             arcade.draw_line(CENTER_X, CENTER_Y, x, y, arcade.color.AMBER, 6)
 
         # Draw the outline of the radar
-        beat_time = round(self.next_beat, 5)
-        buffer = 0.04
-        time = round(time, 5)
-        # print("beat time: " + str(beat_time))
-        # print("game time: " + str(time))
-        # print()
-        if beat_time - UPDATE_RATE < time:
+        if self.next_beat - UPDATE_RATE < song.get_stream_position(player):
             arcade.draw_circle_outline(CENTER_X,
                                        CENTER_Y,
                                        1.5 * SWEEP_LENGTH,
                                        (63, 0, 255, 150),
-                                       border_width= 80,
+                                       border_width= 100,
                                        num_segments=60)
-            if time > beat_time + 5 * UPDATE_RATE:
+            if song.get_stream_position(player) > self.next_beat+ 5 * UPDATE_RATE:
                 self.next_beat = next(self.beats)
         else:
             arcade.draw_circle_outline(CENTER_X,
