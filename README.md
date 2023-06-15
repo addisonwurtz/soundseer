@@ -37,15 +37,13 @@ python bouncingbars.py Songs\Moby-Porcelain.mp3
 
 ### Shades of purple with custom number of frequency bars:
 ```
-python bouncingbars.py Songs\DietMountainDewInstrumental.mp3 --bass_bars 15 --mid_bars 30 --treble_bars 60 
---bass_color 55,0,55 --mid_color 155,0,155 --treble_color 255,0,255 --background_color 5,0,5     
+python bouncingbars.py Songs\DietMountainDewInstrumental.mp3 --bass_bars 15 --mid_bars 30 --treble_bars 60 --bass_color 55,0,55 --mid_color 155,0,155 --treble_color 255,0,255 --background_color 5,0,5     
 ```
 <img src="screenshots/custom_purple.jpg" alt="Screenshot from bouncing bars visualizer with custom purple settings" style="width:1000px">
 
 ### Playing with colors and number of bars:
 ```
-python bouncingbars.py Songs\MKDomDolla-RhymeDust.mp3 --bass_bars 12 --mid_bars 60 --treble_bars 36 --bass_color 
-155,50,0 --mid_color 200,100,0 --treble_color 255,200,0 --background_color 0,100,240                                   
+python bouncingbars.py Songs\MKDomDolla-RhymeDust.mp3 --bass_bars 12 --mid_bars 60 --treble_bars 36 --bass_color 155,50,0 --mid_color 200,100,0 --treble_color 255,200,0 --background_color 0,100,240                                   
 ```
 
 <img src="screenshots/yellow.jpg" alt="Screenshot from bouncing bars visualizer with custom colors" style="width:1000px">
@@ -74,7 +72,7 @@ Unfortunately, this is as far as I got with my shader. It makes a glowing orb th
 detected beat of a song. I am very excited to do more with shaders in the future, and I wish I would have known about 
 them at the start of the term!
 ```
-python shader.py Songs\MassiveAttack-Teardrop.mp3
+python shader.py Songs\DietMountainDewInstrumental.mp3
 ```
 
 <img src="screenshots/shader.png" alt="Screenshot of shader orb" style="width:1000px">
