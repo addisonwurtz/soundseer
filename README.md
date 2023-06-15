@@ -23,29 +23,34 @@ songs in the repository to ensure that these commands will run out-of-the-box.
 ```
 python bouncingbars.py Songs\Moby-Porcelain.mp3
 ```
-<img src="screenshots/default.jpg" alt="drawing" style="width:800px">
-
-![Screenshot from visualizer with default settings](screenshots/default.jpg)
+<img src="screenshots/default.jpg" alt="Screenshot from bouncing bars with default settings" style="width:1000px">
 
 ### Shades of purple with custom number of frequency bars:
 ```
 python bouncingbars.py Songs\DietMountainDewInstrumental.mp3 --bass_bars 15 --mid_bars 30 --treble_bars 60 
 --bass_color 55,0,55 --mid_color 155,0,155 --treble_color 255,0,255 --background_color 5,0,5     
 ```
-![Screenshot from visualizer with custom purple settings](screenshots/custom_purple.jpg)
+<img src="screenshots/custom_purple.jpg" alt="Screenshot from bouncing bars visualizer with custom purple settings" style="width:1000px">
 
 ### Playing with colors and number of bars:
 ```
 python bouncingbars.py Songs\MKDomDolla-RhymeDust.mp3 --bass_bars 12 --mid_bars 60 --treble_bars 36 --bass_color 
 155,50,0 --mid_color 200,100,0 --treble_color 255,200,0 --background_color 0,100,240                                   
 ```
-![Screenshot from visualizer with custom colors](screenshots/yellow.jpg)
+
+<img src="screenshots/yellow.jpg" alt="Screenshot from bouncing bars visualizer with custom colors" style="width:1000px">
 
 ## Python Arcade Examples
 
 ### Beat Radar:
 
+<img src="screenshots/radar.png" alt="Screenshot from radar visualizer" style="width:1000px">
+
+### Shader:
+
+
 ***
+
 
 ## Dependencies
 Soundseer uses librosa, pygame, Python Arcade, PyGame, and NumPy

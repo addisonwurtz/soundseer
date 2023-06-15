@@ -5,7 +5,10 @@ import pygame as pygame
 
 from frequencyband import FrequencyBand
 
+"""Cut-off value for bass frequency band"""
 BASS_CUTOFF = 300
+
+"""Cut-off value for treble frequency band"""
 TREBLE_CUTOFF = 4000
 
 parser = argparse.ArgumentParser(prog='BouncingBars',
@@ -56,6 +59,7 @@ parser.add_argument(
 
 
 def get_decibel(target_time, freq, frequencies_index_ratio):
+    """returns spectrogram for target time"""
     return spectrogram[int(freq * frequencies_index_ratio)][int(target_time * time_index_ratio)]
 
 if __name__ == '__main__':
@@ -64,25 +68,24 @@ if __name__ == '__main__':
 
     time_series, sample_rate = librosa.load(args.filename)  # getting information from the file
 
-    # getting a matrix which contains amplitude values according to frequency and time indexes
+    """get a matrix which contains amplitude values according to frequency and time indexes"""
     stft = np.abs(librosa.stft(time_series, hop_length=512, n_fft=2048*4))
 
     spectrogram = librosa.amplitude_to_db(stft, ref=np.max)  # converting the matrix to decibel matrix
 
     frequencies = librosa.core.fft_frequencies(n_fft=2048 * 4)  # getting an array of frequencies
 
-    # split into frequency bands
+    """split total into three frequency bands"""
     bass_frequencies, mid_frequencies, treble_frequencies = np.split(frequencies, [BASS_CUTOFF, TREBLE_CUTOFF])
 
-    # getting an array of time periodic
+    """getting an array of times based on soundfile"""
     times = librosa.core.frames_to_time(np.arange(spectrogram.shape[1]), sr=sample_rate, hop_length=512, n_fft=2048*4)
 
     time_index_ratio = len(times)/times[len(times) - 1]
 
-
-
     pygame.init()
 
+    """pygame object with system info for selecting window size"""
     infoObject = pygame.display.Info()
 
     screen_w = int(infoObject.current_w)
@@ -90,6 +93,7 @@ if __name__ == '__main__':
 
     background_color = pygame.Color(list(map(int, args.background_color.split(","))))
 
+    # Separate frequency bands for animation
     bass_band = FrequencyBand(lower_bound=0,
                               upper_bound=BASS_CUTOFF,
                               song_frequencies=bass_frequencies,
@@ -120,16 +124,18 @@ if __name__ == '__main__':
                                 screen_h=screen_h,
                                 num_bars=args.treble_bars)
 
-    # Set up the drawing window
+    """Set up the drawing window"""
     screen = pygame.display.set_mode([screen_w, screen_h])
 
+    """track time in order to sync animation with audio"""
     t = pygame.time.get_ticks()
     getTicksLastFrame = t
 
+    """load and play sound file"""
     pygame.mixer.music.load(args.filename)
     pygame.mixer.music.play(0)
 
-    # Run until the user asks to quit
+    """start the game loop"""
     running = True
     while running:
 
@@ -144,6 +150,7 @@ if __name__ == '__main__':
 
         screen.fill(background_color)
 
+        """for each frequency band, get the decibels for each frequency bucket and update corresponding bar height"""
         for treble in treble_band.bars:
             treble.update(deltaTime, get_decibel(pygame.mixer.music.get_pos()/1000.0, treble.freq, treble_band.frequency_index_ratio))
             treble.render(screen)
@@ -154,8 +161,7 @@ if __name__ == '__main__':
             bass.update(deltaTime, get_decibel(pygame.mixer.music.get_pos()/1000.0, bass.freq, bass_band.frequency_index_ratio))
             bass.render(screen)
 
-        # Flip the display
+        """flip display to show updated animation"""
         pygame.display.flip()
 
-    # Done! Time to quit.
     pygame.quit()
