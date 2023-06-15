@@ -1,7 +1,9 @@
 import librosa
 import arcade
+import arcade.color as color
 from arcade.experimental import Shadertoy
 import argparse
+from itertools import cycle
 
 """seconds per frame"""
 UPDATE_RATE = 1 / 60
@@ -18,6 +20,13 @@ class MyGame(arcade.Window):
     """Game window maintains animation and game loop"""
     def __init__(self, filename, bpm, beats):
         super().__init__(width=1800, height=1000)
+
+        self.colors = cycle([color.AMBER, color.TANGERINE, color.SAE, color.AMARANTH, color.CADMIUM_RED,
+                             color.AMARANTH_PURPLE, color.BYZANTIUM, color.BYZANTINE, color.DARK_MAGENTA,
+                             color.CATALINA_BLUE, color.CELADON_BLUE, color.CERULEAN_BLUE, color.CELADON_GREEN,
+                             color.CARIBBEAN_GREEN, color.CADMIUM_GREEN, color.PEAR, color.CITRINE,
+                             color.CYBER_YELLOW])
+        self.color = next(self.colors)
 
         """Name of audio file"""
         self.filename = filename
@@ -55,15 +64,15 @@ class MyGame(arcade.Window):
 
         """if within one update before next beat"""
         if self.next_beat - UPDATE_RATE < self.song.get_stream_position(self.player):
-
             self.scale = 0.05
             if self.song.get_stream_position(self.player) > self.next_beat + 5 * self.update_rate:
                 self.next_beat = next(self.beats)
+                self.color = next(self.colors)
         else:
             self.scale = 0.02
 
         """Set uniform data to send to the GLSL shader"""
-        self.shadertoy.program['color'] = arcade.get_three_float_color(arcade.color.AMBER)
+        self.shadertoy.program['color'] = arcade.get_three_float_color(self.color)
         self.shadertoy.program['scale'] = self.scale
 
         # Run the GLSL code

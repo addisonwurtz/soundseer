@@ -70,9 +70,9 @@ python radar_visualizer.py Songs\DietMountainDewInstrumental.mp3
 ### Shader:
 The shader demo takes a mp3 file as an arguement.
 
-Unfortunately, this is as far as I got with my shader. It makes a glowing orb that pulses with the detected beat of a 
-song. I am very excited to do more with shaders in the future, and I wish I would have known about them at the start 
-of the term!
+Unfortunately, this is as far as I got with my shader. It makes a glowing orb that pulses and changes color with the 
+detected beat of a song. I am very excited to do more with shaders in the future, and I wish I would have known about 
+them at the start of the term!
 ```
 python shader.py Songs\MassiveAttack-Teardrop.mp3
 ```
