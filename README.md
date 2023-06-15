@@ -13,13 +13,23 @@ has a configurable number of frequency bars. Additionally, all the colors are co
 
 While working on my first animation, it became clear that pygame offered fairly limited options for expansion. After 
 some searching I came across python arcade. It has much more visually complex rendering capabilities and build in tools.
-At this time, I am working on building a visualizer in arcade using librosa's beat and note detection tools. 
+
+I built my second visualizer in python arcade using librosa's beat and note detection tools. It is repsonsive, but 
+becomes overly frenetic and strobing for fast songs. One of my demo commands for this visualizer is a 60 bpm metronome.
+Under those conditions I find it quite pleasant. 
+
+While reading the python arcade documentation, I came across shaders for the first time. Unfortunately, I wasn't able to 
+do much with these. The paradigm shift was just too much for me to wrap my mind around this late in the term. But, I 
+wish I had discovered shaders earlier because they can definitely produce the kinds of results that I had in mind when I
+set out on this project. 
 
 ## Pygame Examples
 I've included some screenshots along with the commands to generate that configuration. There are example 
 songs in the repository to ensure that these commands will run out-of-the-box.
 
 ### Default:
+The only required parameter is an mp3 file:
+
 ```
 python bouncingbars.py Songs\Moby-Porcelain.mp3
 ```
@@ -43,11 +53,31 @@ python bouncingbars.py Songs\MKDomDolla-RhymeDust.mp3 --bass_bars 12 --mid_bars 
 ## Python Arcade Examples
 
 ### Beat Radar:
+My python arcade visualizer takes a mp3 file as an argument.
+I used librosa to detect the beat and intensity of the pulses. The speed of the radar needle is determined by the 
+song's detected beats per minute, and the color and size of the background circle are determined by the intensity of
+each pulse.
+
+```
+python radar_visualizer.py Songs\60BPM.mp3
+```
+```
+python radar_visualizer.py Songs\DietMountainDewInstrumental.mp3
+```
 
 <img src="screenshots/radar.png" alt="Screenshot from radar visualizer" style="width:1000px">
 
 ### Shader:
+The shader demo takes a mp3 file as an arguement.
 
+Unfortunately, this is as far as I got with my shader. It makes a glowing orb that pulses with the detected beat of a 
+song. I am very excited to do more with shaders in the future, and I wish I would have known about them at the start 
+of the term!
+```
+python shader.py Songs\MassiveAttack-Teardrop.mp3
+```
+
+<img src="screenshots/shader.png" alt="Screenshot of shader orb" style="width:1000px">
 
 ***
 
@@ -67,9 +97,8 @@ Soundseer uses librosa, pygame, Python Arcade, PyGame, and NumPy
 
 ## Roadmap
 
-- Beat detection visualizer + pyarcade radar sweep
-- Keys to notes visualizer using colors for notes ... "raindrops" (arcade lights)
-- Arcade glow shader???
+- Keys to notes visualizer using colors for notes and a shader for animation 
+- Make some kind of transforming or fractalizing shader animation 
 - Make a side-scrolling animation?
 
 ***

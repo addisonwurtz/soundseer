@@ -6,8 +6,8 @@ import argparse
 """seconds per frame"""
 UPDATE_RATE = 1 / 60
 
-parser = argparse.ArgumentParser(prog='BeatRadar',
-                                 description='Music visualizer that detects and animates the beat of an audio file.')
+parser = argparse.ArgumentParser(prog='Shader',
+                                 description='Shader animation that pulses with beat of music')
 parser.add_argument(
     "filename",
     help="Name of audio file to visualize (mp3)"
