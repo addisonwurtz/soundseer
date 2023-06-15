@@ -28,7 +28,7 @@ I've included some screenshots along with the commands to generate that configur
 songs in the repository to ensure that these commands will run out-of-the-box.
 
 ### Default:
-The only required parameter is an mp3 file:
+The only required parameter is a mp3 file:
 
 ```
 python bouncingbars.py Songs\Moby-Porcelain.mp3
